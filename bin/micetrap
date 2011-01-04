@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby -w
+$LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
+
+require 'micetrap'
+require 'micetrap/version'
+
+SERVICES = Micetrap.services
+
+opts = Trollop::options do
+  version "micetrap #{Micetrap::VERSION} (c) 2011 Josep M. Bach"
+  banner <<-EOS
+  Micetrap opens a server on either a given or random port, emulating fake
+  vulnerable services. Port scanners such as Nmap, when fingerprinting ports
+  to discover service names and versions, will get apparently legitimate
+  responses from common services such as FTP, HTTP or MySQL servers,
+  therefore misleading potential attackers with false information.
+
+  Depending on the operating system you are using, micetrap will try its best
+  to +look feasible+ by choosing the appropriate fake services and versions
+  to emulate. Whenever possible, micetrap will provide a bit outdated versions
+  which are more likely to be vulnerable, and thus making the attacker focus
+  on those ports. While the attacker tries to exploit these ports, she is
+  essentially sending certain packets -- which get properly captured and
+  logged my micetrap. This information might be useful to discover what kind
+  of attacks are being tried against your machine, therefore giving you time
+  and the opportunity to defend appropriately.
+
+  Fire up a simple ftp micetrap like this:
+
+        sudo micetrap ftp
+
+  Running it with sudo will allow you to use default, unsuspicious ports,
+  which may give you advantage at tricking a smart attacker.
+
+  The available options are are:
+    #{SERVICES.join('\n')}
+
+  Usage:
+        [sudo] micetrap <service> [options]
+
+  where [options] are:
+EOS
+  opt :port, "A specific port to use", :default => nil
+  stop_on SERVICES
+end
+
+service = ARGV.shift
+Trollop::die "You need to specify a service, which must be one of the following: #{SERVICES.join(', ')}\n\nMaybe you just feel a bit lost.." unless SERVICES.include?(service)
+
+Micetrap::Server.new(opts).fire!
