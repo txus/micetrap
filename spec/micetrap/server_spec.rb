@@ -18,10 +18,6 @@ module Micetrap
                             :port => 80
         server.port.should be(80)
       end
-      it 'assigns  a new logger' do
-        server = Server.new :service => :test
-        server.logger.should be_a(Logger)
-      end
 
       context 'when given an invalid service' do 
         it 'raises' do 
@@ -51,16 +47,5 @@ module Micetrap
       end
     end
 
-    describe "#log" do
-      it 'delegates to its logger' do
-        test_service = double('service')
-        my_args = [1,2,3]
-        Services::Test.should_receive(:new).and_return test_service
-        server = Server.new :service => :test
-        server.logger.should_receive(:log).with(*my_args)
-
-        server.log(*my_args)
-      end
-    end
   end
 end

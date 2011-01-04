@@ -25,19 +25,35 @@ module Micetrap
         end
       end
 
-      describe "#log" do
+      describe "#log_probe" do
         it 'logs a scanned service along with the scanner info' do
           file = double('file')
           now = Time.now
           Time.stub(:now).and_return now
           File.stub(:open).and_return file
 
-          expected_string = "\n#{time} FTP fake server recorded probes coming from hackerz.com:5978 containing the following:\n\t\t###EVILPROBE###"
+          expected_string = "\n#{now} Recorded a probe coming from hackerz.com - 234.43.14.35:5978 containing the following:\n\t\t###EVILPROBE###"
 
           subject.file.should_receive(:write)
                       .with expected_string
                           
-          subject.log "###EVILPROBE###", "hackerz.com", 5978
+          subject.log_probe "###EVILPROBE###", "234.43.14.35", "hackerz.com", 5978
+        end
+      end
+
+      describe "#log_message" do
+        it 'logs a misc messagescanned service along with the scanner info' do
+          file = double('file')
+          now = Time.now
+          Time.stub(:now).and_return now
+          File.stub(:open).and_return file
+
+          expected_string = "\n#{now} ::: Warning! :::"
+
+          subject.file.should_receive(:write)
+                      .with expected_string
+                          
+          subject.log_message "Warning!"
         end
       end
     end
