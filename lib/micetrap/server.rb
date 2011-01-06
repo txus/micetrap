@@ -10,7 +10,7 @@ module Micetrap
       @service = 
         eval("Micetrap::Services::#{options[:service].to_s.capitalize}").new
       @port = options[:port] # Optional
-    rescue NameError
+    rescue NameError=>e
       raise Services::UnrecognizedServiceException.new("Service #{options[:service].to_s.capitalize} is not recognized")
     end
 

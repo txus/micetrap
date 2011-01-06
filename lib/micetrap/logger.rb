@@ -13,15 +13,23 @@ module Micetrap
     end
 
     def file
-      @file ||= File.open(@filename, 'w')
+      @file ||= File.new(@filename, 'a')
     end
 
-    def log_probe(line, addr, remote_host, remote_port)
-      file.write "\n#{Time.now} Recorded a probe coming from #{remote_host} - #{addr}:#{remote_port} containing the following:\n\t\t#{line}"
+    def log_probe(line, remote_host, remote_port)
+      logged = "\n#{Time.now} Recorded a probe coming from #{remote_host}:#{remote_port} containing the following:\n\t\t#{line}"
+      puts "About to write there"
+      file.write logged
+      puts "wrote to #{file.inspect}"
+      puts logged
     end
 
     def log_message(line)
-      file.write "\n#{Time.now} ::: #{line} :::"
+      logged = "\n#{Time.now} ::: #{line} :::"
+      puts "About to write there"
+      file.write logged
+      puts "wrote to #{file.inspect}"
+      puts logged
     end
 
   end

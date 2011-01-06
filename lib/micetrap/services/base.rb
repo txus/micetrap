@@ -7,23 +7,33 @@ module Micetrap
       attr_reader :logger
 
       def initialize
-        @logger = Logger.new self.class.name.downcase.to_sym
+        @logger = Logger.new self.name.downcase.to_sym
       end
 
       def fire port = nil
-        server = TCPServer.open(port || default_ports.sample || 0)
+        port = port.to_i if port
+        begin
+          server = TCPServer.open(port || default_ports.sample || 0)
+        rescue Errno::EACCES
+          puts "Seems that you are trying to use a system port, for which you need root privileges.\n\nRun micetrap with a custom port if you don't want to sudo!\n"
+          exit(1)
+        end
         @port = server.addr[1]
         @addrs = server.addr[2..-1].uniq
 
-        logger.log_message "#{@name} micetrap listening on #{@addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
+        logger.log_message "#{name} micetrap listening on #{@addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
+        listen(server)
+      end
 
+      def listen(server)
         # Handle Ctrl-C to exit!
         interrupted = false
         trap("INT") { interrupted = true }
 
         while not interrupted do
+          socket = server.accept
           Thread.start do
-            read_from(server.accept)
+            read_from(socket)
           end
         end
       end
@@ -39,13 +49,13 @@ module Micetrap
           while line = s.gets # read a line at a time
             raise ClientQuitError if line =~ /^die\r?$/
 
-            logger.log_probe line, addr, name, port
+            logger.log_probe line, name, port
 
             if line.strip == ""
               s.write response
               logger.log_message "Responded misleadingly: let's drive those hackers nuts!"
               s.close
-              exit(0)
+              Kernel.exit(0)
             end
           end
         rescue ClientQuitError
@@ -59,6 +69,10 @@ module Micetrap
 
       def default_ports; []; end;
       def response; ""; end;
+
+      def name
+        self.class.name.split('::').last
+      end
 
     end
   end

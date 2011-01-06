@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby -w
 $LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
 
+require 'trollop' unless defined?(Trollop)
 require 'micetrap'
 require 'micetrap/version'
 
@@ -32,19 +33,20 @@ opts = Trollop::options do
   Running it with sudo will allow you to use default, unsuspicious ports,
   which may give you advantage at tricking a smart attacker.
 
-  The available options are are:
-    #{SERVICES.join('\n')}
+  The available services are are:
+    #{SERVICES.join(', ')}
 
   Usage:
         [sudo] micetrap <service> [options]
 
   where [options] are:
 EOS
-  opt :port, "A specific port to use", :default => nil
+  opt :port, "A specific port to use", :default => nil, :type => :integer
   stop_on SERVICES
 end
 
-service = ARGV.shift
+puts opts.inspect
+service = ARGV.shift.to_sym
 Trollop::die "You need to specify a service, which must be one of the following: #{SERVICES.join(', ')}\n\nMaybe you just feel a bit lost.." unless SERVICES.include?(service)
 
-Micetrap::Server.new(opts).fire!
+Micetrap::Server.new(opts.update(:service => service)).fire!
