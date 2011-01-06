@@ -1,3 +1,5 @@
+require 'core_ext/array'
+
 require 'micetrap/services/exceptions'
 require 'micetrap/services/base'
 

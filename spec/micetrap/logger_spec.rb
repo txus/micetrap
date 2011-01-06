@@ -6,8 +6,7 @@ module Micetrap
 
     describe "#initialize" do
       it 'initializes the filename' do
-        Time.stub_chain('now.strftime')
-            .and_return "2011-01-03__20-30"
+        Time.stub_chain('now.strftime').and_return "2011-01-03__20-30"
         logger = Logger.new :ftp
         logger.filename.should == "micetrap_ftp_2011-01-03__20-30.log"
       end

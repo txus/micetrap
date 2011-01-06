@@ -17,8 +17,7 @@ module Micetrap
     end
 
     def log_probe(line, remote_host, remote_port)
-      content = line.strip.length > 0 ? line
-                                      : '(empty line)'
+      content = line.strip.length > 0 ? line : '(empty line)'
       logged = "\n#{Time.now} Recorded a probe coming from #{remote_host}:#{remote_port} containing the following: #{content}"
       File.open(@filename, 'a') do |f|
         f.write logged
