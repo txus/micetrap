@@ -67,6 +67,7 @@ and OS guessing. After a while, in our micetrap server terminal we see:
 
    (timestamp) ::: Responded misleadingly: let's drive those hackers nuts! :::
 
+These gets logged inside a .log file within the current directory.
 And in the nmap terminal:
 
    Starting Nmap 5.35DC1 ( http://nmap.org ) at (timestamp)
