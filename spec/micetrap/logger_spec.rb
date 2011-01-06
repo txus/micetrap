@@ -32,10 +32,10 @@ module Micetrap
           Time.stub(:now).and_return now
           File.stub(:new).and_return file
 
-          expected_string = "\n#{now} Recorded a probe coming from hackerz.com:5978 containing the following:\n\t\t###EVILPROBE###"
+          expected_string = "\n#{now} Recorded a probe coming from hackerz.com:5978 containing the following: ###EVILPROBE###"
 
-          subject.file.should_receive(:write)
-                      .with expected_string
+          File.should_receive(:open).and_yield file
+          file.should_receive(:write).with expected_string
                           
           subject.log_probe "###EVILPROBE###", "hackerz.com", 5978
         end
@@ -50,8 +50,8 @@ module Micetrap
 
           expected_string = "\n#{now} ::: Warning! :::"
 
-          subject.file.should_receive(:write)
-                      .with expected_string
+          File.should_receive(:open).and_yield file
+          file.should_receive(:write).with expected_string
                           
           subject.log_message "Warning!"
         end

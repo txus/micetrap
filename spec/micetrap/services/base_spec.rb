@@ -38,13 +38,14 @@ module Micetrap
           server = double('server', :addr => [1,2,3])
           TCPServer.stub(:open).and_return server
           subject.logger.should_receive(:log_message).with do |arg|
-            arg.should include('Base micetrap listening') 
+            arg.should include('Base trap listening') 
           end
           subject.fire
         end
       end
       describe "#listen", :blocking => true do
         it 'calls read_from every time a connection is accepted' do
+          Kernel.stub(:exit)
           connection = double('connection')
           server = double('server', :addr => [1,2,3], :accept => connection)
 

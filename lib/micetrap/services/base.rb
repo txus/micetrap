@@ -28,7 +28,11 @@ module Micetrap
       def listen(server)
         # Handle Ctrl-C to exit!
         interrupted = false
-        trap("INT") { puts "Gracefully exiting..."; exit(0) }
+        trap("INT") do
+          puts "Gracefully exiting...";
+          interrupted = true;
+          Kernel.exit(0)
+        end
 
         while not interrupted do
           socket = server.accept
