@@ -17,18 +17,20 @@ module Micetrap
     end
 
     def log_probe(line, remote_host, remote_port)
-      logged = "\n#{Time.now} Recorded a probe coming from #{remote_host}:#{remote_port} containing the following:\n\t\t#{line}"
-      puts "About to write there"
-      file.write logged
-      puts "wrote to #{file.inspect}"
+      content = line.strip.length > 0 ? line
+                                      : '(empty line)'
+      logged = "\n#{Time.now} Recorded a probe coming from #{remote_host}:#{remote_port} containing the following: #{content}"
+      File.open(@filename, 'a') do |f|
+        f.write logged
+      end
       puts logged
     end
 
     def log_message(line)
       logged = "\n#{Time.now} ::: #{line} :::"
-      puts "About to write there"
-      file.write logged
-      puts "wrote to #{file.inspect}"
+      File.open(@filename, 'a') do |f|
+        f.write logged
+      end
       puts logged
     end
 

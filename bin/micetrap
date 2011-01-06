@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -w
+#!/usr/bin/env ruby
 $LOAD_PATH.unshift File.dirname(__FILE__) + '/../lib'
 
 require 'trollop' unless defined?(Trollop)
@@ -33,6 +33,11 @@ opts = Trollop::options do
   Running it with sudo will allow you to use default, unsuspicious ports,
   which may give you advantage at tricking a smart attacker.
 
+  If you don't want to use system ports, you can run micetrap without having
+  root privileges like this:
+
+        micetrap ftp --port 9999   (or whatever non-system port you like)
+
   The available services are are:
     #{SERVICES.join(', ')}
 
@@ -45,8 +50,12 @@ EOS
   stop_on SERVICES
 end
 
-puts opts.inspect
 service = ARGV.shift.to_sym
 Trollop::die "You need to specify a service, which must be one of the following: #{SERVICES.join(', ')}\n\nMaybe you just feel a bit lost.." unless SERVICES.include?(service)
 
+# Show a nice banner
+ANSI = {:RESET=>"\e[0m", :BOLD=>"\e[1m", :UNDERLINE=>"\e[4m", :LGRAY=>"\e[0;37m", :GRAY=>"\e[1;30m", :RED=>"\e[31m", :GREEN=>"\e[32m", :YELLOW=>"\e[33m", :BLUE=>"\e[34m", :MAGENTA=>"\e[35m", :CYAN=>"\e[36m", :WHITE=>"\e[37m"}
+
+puts "Starting #{ANSI[:BOLD]}Micetrap#{ANSI[:RESET]}..."
+puts "Loading fake #{ANSI[:RED]}#{service}#{ANSI[:RESET]} server... (press Ctrl-C to exit)\n"
 Micetrap::Server.new(opts.update(:service => service)).fire!

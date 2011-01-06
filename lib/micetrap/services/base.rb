@@ -15,20 +15,20 @@ module Micetrap
         begin
           server = TCPServer.open(port || default_ports.sample || 0)
         rescue Errno::EACCES
-          puts "Seems that you are trying to use a system port, for which you need root privileges.\n\nRun micetrap with a custom port if you don't want to sudo!\n"
+          puts "Looks like you are trying to use a system port, for which you need root privileges.\nRun micetrap with another port if you don't want to sudo!\n"
           exit(1)
         end
         @port = server.addr[1]
         @addrs = server.addr[2..-1].uniq
 
-        logger.log_message "#{name} micetrap listening on #{@addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
+        logger.log_message "#{name} trap listening on #{@addrs.collect{|a|"#{a}:#{port}"}.join(' ')}"
         listen(server)
       end
 
       def listen(server)
         # Handle Ctrl-C to exit!
         interrupted = false
-        trap("INT") { interrupted = true }
+        trap("INT") { puts "Gracefully exiting..."; exit(0) }
 
         while not interrupted do
           socket = server.accept
