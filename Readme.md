@@ -35,6 +35,8 @@ which may give you advantage at tricking a smart attacker.
 
    sudo gem install micetrap
 
+Micetrap currently runs on Ruby versions 1.8.7 and 1.9.2.
+
 ##Usage
 
 Just fire up the server with some fake service, such an ftp server:

@@ -11,9 +11,9 @@ module Micetrap
       end
 
       def fire port = nil
-        port = port.to_i if port
+        port = port ? port.to_i : default_ports.sample
         begin
-          server = TCPServer.open(port || default_ports.sample || 0)
+          server = TCPServer.open(port || 0)
         rescue Errno::EACCES
           puts "Looks like you are trying to use a system port, for which you need root privileges.\nRun micetrap with another port if you don't want to sudo!\n"
           exit(1)
