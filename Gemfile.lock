@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    micetrap (0.0.1)
+    micetrap (0.1.0)
       trollop
 
 GEM
@@ -40,4 +40,3 @@ DEPENDENCIES
   guard-rspec
   micetrap!
   rspec (~> 2.3.0)
-  trollop
