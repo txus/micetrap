@@ -19,7 +19,7 @@ GEM
       rake (>= 0.8.1)
     open_gem (1.4.2)
       launchy (~> 0.3.5)
-    rake (0.8.7)
+    rake (13.0.1)
     rspec (2.3.0)
       rspec-core (~> 2.3.0)
       rspec-expectations (~> 2.3.0)
